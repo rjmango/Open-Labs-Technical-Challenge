@@ -19,3 +19,7 @@ def get_all_notes(skip: int = Query(0, ge=0), limit: int = Query(20, ge=20, le=1
 @router.get('/{note_id}', response_model=schemas.NoteOut)
 def get_one_note(note_id: int, db: Session = Depends(get_db)):
     return crud.get_one_note(note_id, db)
+
+@router.put("/{note_id}", response_model=schemas.NoteOut)
+def update_note(note_id: int, note: schemas.NoteUpdate, db: Session = Depends(get_db)):
+    return crud.update_note(note_id, note, db)

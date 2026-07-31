@@ -24,3 +24,12 @@ def get_all_notes(skip:int, limit: int, db: Session):
 
 def get_one_note(note_id: int, db: Session):
     return fetch_db_note(note_id, db)
+
+def update_note(note_id: int, note: schemas.NoteUpdate, db: Session):
+    db_note = fetch_db_note(note_id, db)
+    db_note.title = note.title
+    db_note.body = note.body
+    db_note.tags = stringify_taglist(note.tags)
+    db.commit()
+    db.refresh(db_note)
+    return db_note
