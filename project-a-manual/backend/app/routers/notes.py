@@ -1,12 +1,13 @@
-from fastapi import APIRouter, Depends, status, Query
+from fastapi import APIRouter, Depends, status, Query, Security
 from sqlalchemy.orm import Session
 from typing import List
 
-import schemas
+from auth import verify_api_key
 from database import get_db
+import schemas
 import crud
 
-router = APIRouter(prefix="/notes", tags=["notes"])
+router = APIRouter(prefix="/notes", tags=["notes"], dependencies=[Security(verify_api_key)])
 
 @router.post("/", response_model=schemas.NoteOut, status_code=status.HTTP_201_CREATED)
 def create_note(note: schemas.NoteCreate, db: Session = Depends(get_db)):
