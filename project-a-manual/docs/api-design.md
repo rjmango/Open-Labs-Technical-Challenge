@@ -170,3 +170,40 @@ At least one of `tag` or `q` must be provided.
 ```json
 { "detail": "At least one of 'tag' or 'q' query parameters is required" }
 ```
+
+
+## Error response shapes
+
+This API uses two error response shapes, by design:
+
+### Validation errors (422)
+Returned when request input fails Pydantic validation (e.g. empty
+title, too many tags). Uses FastAPI's default structured format so
+a frontend can identify exactly which field failed and why:
+
+{
+  "detail": [
+    {
+      "type": "value_error",
+      "loc": ["body", "title"],
+      "msg": "Value error, title must not be empty",
+      "input": "",
+      "ctx": {...}
+    }
+  ]
+}
+
+This is intentionally kept over a flattened string message, since
+losing the `loc` field would make it harder for a frontend to map
+an error to the specific form field that caused it.
+
+### Auth and not-found errors (401 / 404)
+Returned as a simple string message, since there's no specific field
+to point to:
+
+{
+  "detail": "Invalid or missing API key"
+}
+{
+  "detail": "Note not found"
+}
