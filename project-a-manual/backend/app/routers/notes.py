@@ -23,3 +23,7 @@ def get_one_note(note_id: int, db: Session = Depends(get_db)):
 @router.put("/{note_id}", response_model=schemas.NoteOut)
 def update_note(note_id: int, note: schemas.NoteUpdate, db: Session = Depends(get_db)):
     return crud.update_note(note_id, note, db)
+
+@router.delete("/{note_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_note(note_id: int, db: Session = Depends(get_db)):
+    crud.delete_note(note_id, db)

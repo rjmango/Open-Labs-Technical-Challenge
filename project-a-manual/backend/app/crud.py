@@ -33,3 +33,8 @@ def update_note(note_id: int, note: schemas.NoteUpdate, db: Session):
     db.commit()
     db.refresh(db_note)
     return db_note
+
+def delete_note(note_id: int, db: Session):
+    db_note = fetch_db_note(note_id, db)
+    db.delete(db_note)
+    db.commit()
