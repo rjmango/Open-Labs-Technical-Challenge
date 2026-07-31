@@ -17,6 +17,14 @@ def create_note(note: schemas.NoteCreate, db: Session = Depends(get_db)):
 def get_all_notes(skip: int = Query(0, ge=0), limit: int = Query(20, ge=20, le=100), db: Session = Depends(get_db)):
     return crud.get_all_notes(skip, limit, db)
 
+@router.get("/search", response_model=List[schemas.NoteOut])
+def search_notes(
+    tag: str | None = Query(None),
+    query: str | None = Query(None),
+    db: Session = Depends(get_db),
+):
+    return crud.search_notes(tag, query, db)
+
 @router.get('/{note_id}', response_model=schemas.NoteOut)
 def get_one_note(note_id: int, db: Session = Depends(get_db)):
     return crud.get_one_note(note_id, db)

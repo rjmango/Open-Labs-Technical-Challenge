@@ -38,3 +38,13 @@ def delete_note(note_id: int, db: Session):
     db_note = fetch_db_note(note_id, db)
     db.delete(db_note)
     db.commit()
+
+def search_notes(tag: str | None, q: str | None, db: Session):
+    query = db.query(models.Note)
+    if tag:
+        query = query.filter(models.Note.tags.ilike(f"%{tag}%"))
+    if q:
+        query = query.filter(
+            (models.Note.title.ilike(f"%{q}%")) | (models.Note.body.ilike(f"%{q}%"))
+        )
+    return query.all()
